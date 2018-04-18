@@ -28,9 +28,9 @@ def retrieve_repositories_tags_by_file(source_registry, filename):
     for line in lines:
         if line.startswith('#'):
             continue
-        if line.strip()=="":
+        if line == "":
             continue
-        if line.rfind(":")>0:
+        if line.rfind(":") > 0:
             images.append(line)
         else:
             images.extend(retrieve_repositories_tags(source_registry, line))
