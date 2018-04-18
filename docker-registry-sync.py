@@ -26,6 +26,8 @@ def retrieve_repositories_tags_by_file(source_registry, filename):
         sys.exit(1)
     lines = [line.strip() for line in open(filename)]
     for line in lines:
+        if line.startswith('#'):
+            continue
         if line.strip()=="":
             continue
         if line.rfind(":")>0:
