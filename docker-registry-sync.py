@@ -63,6 +63,9 @@ def exec_sync_docker_commands(source_registry,target_registry, images):
         #os.popen( "docker tag %s/%s %s/%s" % (source_registry, image, target_registry, image)).read()
         #os.popen( "docker push %s/%s" % (target_registry, image)).read()
 
+def list_images_from_registry(source_registry, images):
+    for image in images:
+        print("%s/%s" % (source_registry, image))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Syncs images from a source registry to target registry.',
@@ -74,6 +77,7 @@ if __name__ == '__main__':
     parser.add_argument('--to', action='store', dest='target_registry', help='The target registry hostname',
                     required=True)
     parser.add_argument('--file', action='store', dest='images_file', help='The images list, each image a line')
+    parser.add_argument('--list', action='store_true', dest='list_only', help='If this flag is present, only list images'                                                                               'in source registry')
     parser.add_argument('--dry-run', action='store_true', dest='dry_run', help='If this flag is present, commands will be'
                                                                          'dumped to stdout instead of run')
     options = parser.parse_args()
@@ -82,6 +86,10 @@ if __name__ == '__main__':
         images = retrieve_repositories_tags_by_file(options.source_registry, options.images_file)
     else:
         images = retrieve_repositories_tags_all(options.source_registry)
+
+    if options.list_only:
+        list_images_from_registry(options.source_registry, images)
+        exit(0)
 
     if options.dry_run:
         dry_run_print_docker_commands(options.source_registry,options.target_registry, images)
